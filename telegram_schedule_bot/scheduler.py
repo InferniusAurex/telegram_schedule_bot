@@ -8,18 +8,37 @@ IST = pytz.timezone("Asia/Kolkata")
 async def daily_job(app, chat_id):
     last_sent = None
 
+    print("Scheduler started...")
+
     while True:
         now = datetime.now(IST)
 
-        # Run only Monday–Friday at 5:00 AM IST
-        if now.weekday() < 5 and now.hour == 5 and now.minute == 0:
-            today = now.strftime("%Y-%m-%d")
+        # Debug heartbeat (every loop)
+        print("Scheduler tick:", now.strftime("%Y-%m-%d %H:%M:%S"))
 
-            if today != last_sent:
-                msg = build_message_for_date(now, "Everyone")
-                await app.bot.send_message(chat_id, msg, parse_mode="HTML")
-                last_sent = today
+        # Monday–Friday only
+        if now.weekday() < 5:
 
-            await asyncio.sleep(60)
+            # Allow small window (05:00–05:01)
+            if now.hour == 5 and now.minute <= 1:
 
+                today = now.strftime("%Y-%m-%d")
+
+                if today != last_sent:
+                    print("DAILY JOB TRIGGERED")
+
+                    msg = build_message_for_date(now, "Everyone")
+
+                    await app.bot.send_message(
+                        chat_id,
+                        msg,
+                        parse_mode="HTML"
+                    )
+
+                    last_sent = today
+
+                    # Sleep 2 minutes so it never double sends
+                    await asyncio.sleep(120)
+
+        # Normal loop sleep
         await asyncio.sleep(20)
