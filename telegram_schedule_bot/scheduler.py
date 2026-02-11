@@ -13,14 +13,13 @@ async def daily_job(app, chat_id):
     while True:
         now = datetime.now(IST)
 
-        # Debug heartbeat (every loop)
         print("Scheduler tick:", now.strftime("%Y-%m-%d %H:%M:%S"))
 
         # Monday–Friday only
         if now.weekday() < 5:
 
-            # Allow small window (05:00–05:01)
-          if now.hour == 22 and now.minute <= 25:
+            # Time window (22:00–22:01 for testing)
+            if now.hour == 22 and now.minute < 2:
 
                 today = now.strftime("%Y-%m-%d")
 
@@ -37,8 +36,7 @@ async def daily_job(app, chat_id):
 
                     last_sent = today
 
-                    # Sleep 2 minutes so it never double sends
+                    # prevent double send
                     await asyncio.sleep(120)
 
-        # Normal loop sleep
         await asyncio.sleep(20)
