@@ -85,7 +85,7 @@ app.add_handler(CommandHandler("id", get_id))
 
 app.job_queue.run_daily(
     send_daily,
-    time=time(22, 52, tzinfo=IST),
+    time=time(5, 0, tzinfo=IST),
     days=(0,1,2,3,4)
 )
 
