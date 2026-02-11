@@ -20,7 +20,7 @@ async def daily_job(app, chat_id):
         if now.weekday() < 5:
 
             # Allow small window (05:00–05:01)
-            if now.hour == 5 and now.minute <= 1:
+          if now.hour == 22 and now.minute <= 52:
 
                 today = now.strftime("%Y-%m-%d")
 
